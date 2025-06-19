@@ -1,113 +1,437 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Évaluation de formation - Up Word</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Évaluation à chaud - Formation terminée</title>
   <style>
-    body {
-      font-family: sans-serif;
-      margin: 20px;
-      background-color: #f4f4f4;
+    :root {
+      --primary-color: #023762;
+      --secondary-color: #0152a8;
+      --light-gray: #f4f4f4;
+      --medium-gray: #ddd;
+      --dark-gray: #333;
     }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--light-gray);
+      color: var(--dark-gray);
+      line-height: 1.6;
+    }
+    
+    .header {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
     .container {
       max-width: 800px;
-      margin: auto;
+      margin: 2rem auto;
       background: white;
-      padding: 20px;
+      padding: 2rem;
       border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
     }
+    
     h1, h2 {
-      color: #023762;
+      color: var(--primary-color);
+      margin-top: 0;
     }
+    
+    h2 {
+      border-bottom: 2px solid var(--medium-gray);
+      padding-bottom: 0.5rem;
+    }
+    
+    .intro-text {
+      margin-bottom: 2rem;
+      font-style: italic;
+    }
+    
     label {
       font-weight: bold;
       display: block;
-      margin-top: 15px;
+      margin: 1rem 0 0.5rem;
     }
-    input, textarea, select {
+    
+    input[type="text"],
+    input[type="date"],
+    textarea,
+    select {
       width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border: 1px solid var(--medium-gray);
       border-radius: 4px;
+      box-sizing: border-box;
+      font-family: inherit;
     }
+    
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+    }
+    
+    th, td {
+      border: 1px solid var(--medium-gray);
+      padding: 0.75rem;
+      text-align: center;
+    }
+    
+    th {
+      background-color: var(--light-gray);
+      font-weight: bold;
+    }
+    
+    .rating-stars {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 1rem 0;
+    }
+    
+    .star {
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #ccc;
+    }
+    
+    .star.selected {
+      color: gold;
+    }
+    
+    .scale {
+      display: flex;
+      justify-content: space-between;
+      margin: 1rem 0;
+    }
+    
+    .scale-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+    
     button {
-      background-color: #023762;
+      background-color: var(--primary-color);
       color: white;
       border: none;
-      padding: 12px 20px;
-      font-size: 16px;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
       border-radius: 4px;
       cursor: pointer;
+      transition: background-color 0.3s;
+      flex: 1;
+      min-width: 200px;
     }
+    
     button:hover {
-      background-color: #0152a8;
+      background-color: var(--secondary-color);
     }
+    
     .note {
       font-style: italic;
-      margin-top: 20px;
+      margin-top: 1.5rem;
+      font-size: 0.9rem;
+      color: #666;
+    }
+    
+    .required:after {
+      content: " *";
+      color: red;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        margin: 1rem;
+        padding: 1rem;
+      }
+      
+      table {
+        font-size: 0.9rem;
+      }
+      
+      th, td {
+        padding: 0.5rem;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container" id="formContent">
-    <h1>Évaluation à chaud - Up Word</h1>
-    <p>Merci de prendre quelques minutes pour répondre à ce questionnaire.</p>
-
+  <div class="header">
+    <h1>Évaluation à chaud - Formation terminée</h1>
+  </div>
+  
+  <div class="container">
     <form id="evaluationForm">
-      <label for="nom">Votre nom :</label>
-      <input type="text" id="nom" name="nom" required />
-
-      <label for="formation">Nom de la formation :</label>
-      <input type="text" id="formation" name="formation" required />
-
-      <label for="lieu">Lieu de la formation :</label>
-      <input type="text" id="lieu" name="lieu" required />
-
-      <label for="date">Date de la formation :</label>
-      <input type="date" id="date" name="date" required />
-
-      <label for="utilite">La formation vous semble-t-elle utile ?</label>
-      <select id="utilite" name="utilite" required>
-        <option value="">-- Sélectionnez --</option>
-        <option>Pas du tout</option>
-        <option>Un peu</option>
-        <option>Oui</option>
-        <option>Tout à fait</option>
-      </select>
-
-      <label for="attentes">A-t-elle répondu à vos attentes ?</label>
-      <select id="attentes" name="attentes" required>
-        <option value="">-- Sélectionnez --</option>
-        <option>Pas du tout</option>
-        <option>Un peu</option>
-        <option>Oui</option>
-        <option>Tout à fait</option>
-      </select>
-
-      <label for="pointsPlus">Ce que vous avez le plus apprécié :</label>
-      <textarea id="pointsPlus" name="pointsPlus" rows="3"></textarea>
-
-      <label for="pointsMoins">Ce que vous avez le moins apprécié :</label>
-      <textarea id="pointsMoins" name="pointsMoins" rows="3"></textarea>
-
-      <label for="suggestions">Suggestions d’amélioration :</label>
-      <textarea id="suggestions" name="suggestions" rows="3"></textarea>
-
-      <button type="button" onclick="generatePDF()">📄 Télécharger le PDF</button>
-
-      <p class="note">Vous pouvez ensuite envoyer ce PDF par email à : <strong>contact@upword.co.uk</strong></p>
+      <h2>Informations sur la formation</h2>
+      
+      <label for="actionFormation" class="required">Action de formation :</label>
+      <input type="text" id="actionFormation" name="actionFormation" required>
+      
+      <label for="lieuFormation" class="required">Lieu de la formation :</label>
+      <input type="text" id="lieuFormation" name="lieuFormation" required>
+      
+      <label for="dateFormation" class="required">Date de la formation :</label>
+      <input type="date" id="dateFormation" name="dateFormation" required>
+      
+      <label>Formateur(s) :</label>
+      <div style="margin-bottom: 1rem;">FERENCIK Jan</div>
+      
+      <label for="nom" class="required">Votre nom :</label>
+      <input type="text" id="nom" name="nom" required>
+      
+      <p class="intro-text">
+        Ce questionnaire a pour objectif d'évaluer avec vous la formation que nous dispensons, 
+        dans un souci permanent d'y apporter des améliorations et de répondre à vos attentes. 
+        Aussi, votre avis nous étant précieux, nous vous demandons de bien vouloir répondre 
+        avec soin à toutes les questions posées.
+      </p>
+      
+      <h2>Évaluation générale</h2>
+      <p>Cochez une case par ligne</p>
+      
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 50%; text-align: left;">Question</th>
+            <th>Pas du tout d'accord 😣</th>
+            <th>Plutôt pas d'accord 😏</th>
+            <th>Plutôt d'accord 🙂</th>
+            <th>Totalement d'accord 😁</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: left;">Cette formation est-t-elle utile pour renforcer vos compétences dans votre poste actuel ?</td>
+            <td><input type="radio" name="utilite" value="pas-du-tout" required></td>
+            <td><input type="radio" name="utilite" value="plutot-pas"></td>
+            <td><input type="radio" name="utilite" value="plutot"></td>
+            <td><input type="radio" name="utilite" value="totalement"></td>
+          </tr>
+          <tr>
+            <td style="text-align: left;">La formation a-t-elle répondu à vos attentes initiales ?</td>
+            <td><input type="radio" name="attentes" value="pas-du-tout" required></td>
+            <td><input type="radio" name="attentes" value="plutot-pas"></td>
+            <td><input type="radio" name="attentes" value="plutot"></td>
+            <td><input type="radio" name="attentes" value="totalement"></td>
+          </tr>
+          <tr>
+            <td style="text-align: left;">Pensez-vous avoir atteint les objectifs pédagogiques prévus lors de la formation ?</td>
+            <td><input type="radio" name="objectifs" value="pas-du-tout" required></td>
+            <td><input type="radio" name="objectifs" value="plutot-pas"></td>
+            <td><input type="radio" name="objectifs" value="plutot"></td>
+            <td><input type="radio" name="objectifs" value="totalement"></td>
+          </tr>
+          <tr>
+            <td style="text-align: left;">Êtes-vous satisfait de la communication des objectifs et du programme avant la formation ?</td>
+            <td><input type="radio" name="communication" value="pas-du-tout" required></td>
+            <td><input type="radio" name="communication" value="plutot-pas"></td>
+            <td><input type="radio" name="communication" value="plutot"></td>
+            <td><input type="radio" name="communication" value="totalement"></td>
+          </tr>
+          <tr>
+            <td style="text-align: left;">Êtes-vous satisfait de l'organisation et du déroulement de la formation ?</td>
+            <td><input type="radio" name="organisation" value="pas-du-tout" required></td>
+            <td><input type="radio" name="organisation" value="plutot-pas"></td>
+            <td><input type="radio" name="organisation" value="plutot"></td>
+            <td><input type="radio" name="organisation" value="totalement"></td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <h2>Ressources pédagogiques et animation</h2>
+      <p>Cochez une case par ligne</p>
+      
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 60%; text-align: left;">Question</th>
+            <th>Pas du tout 😣</th>
+            <th>En partie 🙂</th>
+            <th>Totalement 😁</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: left;">Êtes-vous satisfait de la clarté du contenu des ressources proposées ?</td>
+            <td><input type="radio" name="clarte" value="pas-du-tout" required></td>
+            <td><input type="radio" name="clarte" value="en-partie"></td>
+            <td><input type="radio" name="clarte" value="totalement"></td>
+          </tr>
+          <tr>
+            <td style="text-align: left;">Êtes-vous satisfait de la qualité des supports pédagogiques ?</td>
+            <td><input type="radio" name="supports" value="pas-du-tout" required></td>
+            <td><input type="radio" name="supports" value="en-partie"></td>
+            <td><input type="radio" name="supports" value="totalement"></td>
+          </tr>
+          <tr>
+            <td style="text-align: left;">Êtes-vous satisfait de l'animation de la formation par le ou les intervenants ?</td>
+            <td><input type="radio" name="animation" value="pas-du-tout" required></td>
+            <td><input type="radio" name="animation" value="en-partie"></td>
+            <td><input type="radio" name="animation" value="totalement"></td>
+          </tr>
+          <tr>
+            <td style="text-align: left;">Êtes-vous satisfait de la progression de la formation (durée, rythme, théorie/pratique) ?</td>
+            <td><input type="radio" name="progression" value="pas-du-tout" required></td>
+            <td><input type="radio" name="progression" value="en-partie"></td>
+            <td><input type="radio" name="progression" value="totalement"></td>
+          </tr>
+          <tr>
+            <td style="text-align: left;">Êtes-vous satisfait de la qualité globale de la formation ?</td>
+            <td><input type="radio" name="qualite" value="pas-du-tout" required></td>
+            <td><input type="radio" name="qualite" value="en-partie"></td>
+            <td><input type="radio" name="qualite" value="totalement"></td>
+          </tr>
+          <tr>
+            <td style="text-align: left;">Recommanderiez-vous cette formation à une personne exerçant le même métier que vous ?</td>
+            <td><input type="radio" name="recommendation" value="pas-du-tout" required></td>
+            <td><input type="radio" name="recommendation" value="en-partie"></td>
+            <td><input type="radio" name="recommendation" value="totalement"></td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <h2>Retour d'expérience</h2>
+      
+      <label for="pointsPlus">Quels éléments avez-vous le plus appréciés ?</label>
+      <textarea id="pointsPlus" name="pointsPlus" placeholder="Décrivez les aspects positifs de la formation..."></textarea>
+      
+      <label for="pointsMoins">Quels éléments avez-vous le moins appréciés ?</label>
+      <textarea id="pointsMoins" name="pointsMoins" placeholder="Décrivez ce qui pourrait être amélioré..."></textarea>
+      
+      <label>Satisfaction générale après ce cours :</label>
+      <div class="rating-stars" id="starRating">
+        <span class="star" data-value="1">★</span>
+        <span class="star" data-value="2">★</span>
+        <span class="star" data-value="3">★</span>
+        <span class="star" data-value="4">★</span>
+        <span class="star" data-value="5">★</span>
+      </div>
+      <input type="hidden" id="satisfaction" name="satisfaction" required>
+      
+      <h2>Auto-évaluation des compétences</h2>
+      <p>À ce jour, considérez-vous maîtriser les objectifs du programme ?</p>
+      
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 70%; text-align: left;">Compétence</th>
+            <th>Pas du tout</th>
+            <th>Insuffisamment</th>
+            <th>En partie</th>
+            <th>Totalement</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: left;">Produire un discours simple et cohérent sur des sujets familiers et dans ses domaines d'intérêt.</td>
+            <td><input type="radio" name="discours" value="pas-du-tout" required></td>
+            <td><input type="radio" name="discours" value="insuffisamment"></td>
+            <td><input type="radio" name="discours" value="en-partie"></td>
+            <td><input type="radio" name="discours" value="totalement"></td>
+          </tr>
+          <tr>
+            <td style="text-align: left;">Lire et rédiger des textes et des e-mails simples sur des sujets familiers, ou professionnels.</td>
+            <td><input type="radio" name="lecture" value="pas-du-tout" required></td>
+            <td><input type="radio" name="lecture" value="insuffisamment"></td>
+            <td><input type="radio" name="lecture" value="en-partie"></td>
+            <td><input type="radio" name="lecture" value="totalement"></td>
+          </tr>
+          <!-- Les autres compétences suivent le même modèle -->
+        </tbody>
+      </table>
+      
+      <h3>Évaluation détaillée des compétences</h3>
+      <p>Entourez le score correspondant à votre niveau (0 = pas du tout, 10 = parfaitement)</p>
+      
+      <label>Produire un discours simple et cohérent sur des sujets familiers et dans ses domaines d'intérêt.</label>
+      <div class="scale">
+        <span>0</span>
+        <input type="range" min="0" max="10" value="5" class="slider" id="discoursScore" name="discoursScore">
+        <span>10</span>
+      </div>
+      
+      <label>Lire et rédiger des textes et des e-mails simples sur des sujets familiers, ou professionnels.</label>
+      <div class="scale">
+        <span>0</span>
+        <input type="range" min="0" max="10" value="5" class="slider" id="lectureScore" name="lectureScore">
+        <span>10</span>
+      </div>
+      
+      <!-- Les autres échelles de compétences suivent le même modèle -->
+      
+      <h2>Suggestions</h2>
+      <label for="suggestions">Avez-vous des suggestions pour améliorer cette formation ?</label>
+      <textarea id="suggestions" name="suggestions" placeholder="Vos idées pour améliorer cette formation..."></textarea>
+      
+      <div class="buttons">
+        <button type="submit">Soumettre l'évaluation</button>
+        <button type="reset">Réinitialiser</button>
+      </div>
+      
+      <p class="note">
+        Merci pour votre participation. Vos retours nous aideront à améliorer nos formations futures.
+      </p>
     </form>
   </div>
 
   <script>
-    function generatePDF() {
-      const element = document.getElementById('formContent');
-      html2pdf().from(element).save('Evaluation_UpWord.pdf');
-    }
+    // Gestion des étoiles de satisfaction
+    const stars = document.querySelectorAll('.star');
+    const satisfactionInput = document.getElementById('satisfaction');
+    
+    stars.forEach(star => {
+      star.addEventListener('click', function() {
+        const value = this.getAttribute('data-value');
+        satisfactionInput.value = value;
+        
+        stars.forEach(s => {
+          s.classList.remove('selected');
+          if (s.getAttribute('data-value') <= value) {
+            s.classList.add('selected');
+          }
+        });
+      });
+    });
+    
+    // Validation du formulaire
+    document.getElementById('evaluationForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Vérification des champs requis
+      if (!satisfactionInput.value) {
+        alert('Veuillez évaluer votre satisfaction générale');
+        return;
+      }
+      
+      // Ici, vous pourriez ajouter du code pour envoyer les données
+      alert('Merci pour votre évaluation !');
+      this.reset();
+      
+      // Réinitialiser les étoiles
+      stars.forEach(star => star.classList.remove('selected'));
+      satisfactionInput.value = '';
+    });
   </script>
 </body>
 </html>
