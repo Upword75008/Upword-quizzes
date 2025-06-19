@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Évaluation de Formation UP WORD</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+        Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background-color: #f8f9fa;
+    }
+    #root {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+  </style>
+</head>
+<body>
+  <!-- Conteneur où React va monter l'application -->
+  <div id="root"></div>
+
+  <!-- Charge les bibliothèques React nécessaires -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  
+  <!-- Charge Babel pour transformer le JSX -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+  <!-- Charge les icônes Lucide -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Charge votre composant React -->
+  <script type="text/babel" src="FormationEvaluation.js"></script>
+  
+  <script type="text/babel">
+    // Initialise les icônes Lucide
+    lucide.createIcons();
+    
+    // Rendu du composant principal
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<FormationEvaluation />);
+  </script>
+</body>
+</html>
