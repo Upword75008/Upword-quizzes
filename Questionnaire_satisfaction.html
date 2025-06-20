@@ -4,164 +4,450 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UP WORD - Évaluation de Formation</title>
-    <!-- Inclure jsPDF et html2canvas -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        :root {
-            --primary: #2c3e50;
-            --secondary: #e74c3c;
-            --light: #ecf0f1;
-            --dark: #2c3e50;
-            --success: #27ae60;
-        }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
-            color: var(--dark);
+            color: #333;
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-            background-color: #f9f9f9;
         }
-        /* (Conserver tout le CSS précédent comme dans la version précédente) */
-        /* ... */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #2c3e50;
+            padding-bottom: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        h2 {
+            color: #3498db;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .required {
+            color: red;
+        }
+        .contact {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 30px;
+        }
+        .rating {
+            display: flex;
+            gap: 10px;
+        }
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            min-height: 80px;
+        }
+        input[type="text"], input[type="date"], select {
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .rating label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
     </style>
 </head>
 <body>
-    <!-- (Conserver tout le HTML précédent jusqu'au formulaire) -->
-    <!-- ... -->
+    <div class="header">
+        <h1>UP WORD</h1>
+        <p><em>Formation linguistique d'excellence</em></p>
+        <h2>Questionnaire d'évaluation de formation</h2>
+        <p>Votre feedback nous est précieux pour améliorer continuellement la qualité de nos formations et services.<br>
+        Merci de prendre 5 minutes pour partager votre expérience.</p>
+    </div>
 
+    <h2>1. Informations générales <span class="required">*</span></h2>
+    <form>
+        <table>
+            <tr>
+                <td><strong>Nom de la formation :</strong></td>
+                <td><input type="text" name="formation_name" required style="width: 100%"></td>
+            </tr>
+            <tr>
+                <td><strong>Nom de l'apprenant :</strong></td>
+                <td><input type="text" name="student_name" required style="width: 100%"></td>
+            </tr>
+            <tr>
+                <td><strong>Enseignant(e) :</strong></td>
+                <td><input type="text" name="teacher_name" required style="width: 100%"></td>
+            </tr>
+            <tr>
+                <td><strong>Date :</strong></td>
+                <td><input type="date" name="evaluation_date" required></td>
+            </tr>
+        </table>
+
+        <h2>2. Satisfaction globale (1 = Très insatisfait → 5 = Très satisfait)</h2>
+        <table>
+            <tr>
+                <th>Critère</th>
+                <th>Note</th>
+            </tr>
+            <tr>
+                <td>Pertinence par rapport à vos besoins</td>
+                <td class="rating">
+                    <select name="pertinence">
+                        <option value="">Choisir</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Qualité du contenu pédagogique</td>
+                <td class="rating">
+                    <select name="qualite_contenu">
+                        <option value="">Choisir</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Compétence de l'enseignant</td>
+                <td class="rating">
+                    <select name="competence_enseignant">
+                        <option value="">Choisir</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Méthodes pédagogiques utilisées</td>
+                <td class="rating">
+                    <select name="methodes_pedagogiques">
+                        <option value="">Choisir</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Rythme de la formation</td>
+                <td class="rating">
+                    <select name="rythme_formation">
+                        <option value="">Choisir</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+
+        <h2>3. Organisation administrative</h2>
+        <table>
+            <tr>
+                <th>Critère</th>
+                <th>Note</th>
+            </tr>
+            <tr>
+                <td>Clarté des informations avant la formation</td>
+                <td class="rating">
+                    <select name="info_clarity">
+                        <option value="">Choisir</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Accueil et disponibilité de l'équipe</td>
+                <td class="rating">
+                    <select name="accueil_equipe">
+                        <option value="">Choisir</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Gestion des plannings</td>
+                <td class="rating">
+                    <select name="gestion_planning">
+                        <option value="">Choisir</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Support technique</td>
+                <td class="rating">
+                    <select name="support_technique">
+                        <option value="">Choisir</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+
+        <h2>4. Recommandation</h2>
+        <p>À quel point recommanderiez-vous UP WORD ?</p>
+        <div class="rating">
+            <label><input type="radio" name="recommendation" value="1"> 1 (Pas du tout)</label>
+            <label><input type="radio" name="recommendation" value="2"> 2</label>
+            <label><input type="radio" name="recommendation" value="3"> 3</label>
+            <label><input type="radio" name="recommendation" value="4"> 4</label>
+            <label><input type="radio" name="recommendation" value="5"> 5 (Absolument)</label>
+        </div>
+        <p>Pourquoi ? <input type="text" name="recommendation_why" style="width: 100%"></p>
+
+        <h2>5. Commentaires</h2>
+        <p>Points forts de la formation :</p>
+        <textarea name="strengths" placeholder="Décrivez les aspects positifs de votre formation..."></textarea>
+
+        <p>Améliorations suggérées :</p>
+        <textarea name="improvements" placeholder="Quelles améliorations proposeriez-vous ?"></textarea>
+
+        <p>Autres remarques :</p>
+        <textarea name="comments" placeholder="Toute autre remarque ou suggestion..."></textarea>
+
+        <div class="contact">
+            <h3>Contact UP WORD</h3>
+            <p>📞 <strong>06.01.68.48.09</strong></p>
+            <p>📧 <strong>contact@upword.com</strong></p>
+            <p>🌐 <strong>www.upword.com</strong></p>
+            <p><em>Un grand merci pour votre contribution !</em></p>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <button type="button" onclick="generatePDF()" style="padding: 15px 30px; background-color: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; margin-right: 10px;">📄 Générer PDF</button>
+            <p style="margin-top: 15px; color: #666; font-style: italic;">
+                Après avoir généré le PDF, veuillez l'envoyer par email à : <strong>contact@upword.co.uk</strong>
+            </p>
+        </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
-        // Initialiser jsPDF
-        const { jsPDF } = window.jspdf;
-        
-        document.getElementById('evaluationForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            // Créer un nouveau PDF
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             
-            // Ajouter le logo et l'en-tête
-            doc.setFontSize(22);
-            doc.setTextColor(44, 62, 80);
-            doc.text('UP WORD - Évaluation de Formation', 105, 20, { align: 'center' });
-            
-            doc.setFontSize(12);
-            doc.text('Nom de la formation: ' + document.getElementById('courseName').value, 14, 40);
-            doc.text('Apprenant: ' + document.getElementById('studentName').value, 14, 50);
-            doc.text('Enseignant: ' + document.getElementById('teacherName').value, 14, 60);
-            doc.text('Date: ' + document.getElementById('evaluationDate').value, 14, 70);
-            
-            // Ajouter une ligne de séparation
-            doc.setDrawColor(231, 76, 60);
-            doc.setLineWidth(0.5);
-            doc.line(14, 80, 196, 80);
-            
-            // Section Satisfaction Globale
+            // Configuration de base
             doc.setFontSize(16);
-            doc.setTextColor(231, 76, 60);
-            doc.text('1. Satisfaction Globale', 14, 90);
+            doc.text('UP WORD - Évaluation de Formation', 20, 20);
             
             doc.setFontSize(12);
-            doc.setTextColor(0, 0, 0);
+            let y = 40;
             
-            const globalRatings = [
-                { label: 'Pertinence par rapport à vos besoins', name: 'relevance' },
-                { label: 'Qualité globale de la formation', name: 'quality' },
-                { label: 'Niveau de difficulté', name: 'difficulty' }
-            ];
+            // Récupération des données du formulaire
+            const formData = new FormData(document.querySelector('form'));
             
-            let yPosition = 100;
-            globalRatings.forEach(item => {
-                const selectedValue = document.querySelector(`input[name="${item.name}"]:checked`);
-                doc.text(`${item.label}: ${selectedValue ? selectedValue.value : 'N/A'}`, 20, yPosition);
-                yPosition += 10;
-            });
+            // Section 1 - Informations générales
+            doc.setFontSize(14);
+            doc.text('1. Informations générales', 20, y);
+            y += 10;
             
-            // Section Organisation Administrative
-            doc.setFontSize(16);
-            doc.setTextColor(231, 76, 60);
-            doc.text('2. Organisation Administrative', 14, yPosition + 10);
-            
-            doc.setFontSize(12);
-            doc.setTextColor(0, 0, 0);
-            yPosition += 20;
-            
-            const adminRatings = [
-                { label: 'Clarté des informations', name: 'infoClarity' },
-                { label: 'Aide technique', name: 'techSupport' },
-                { label: 'Réactivité en cas de problème', name: 'responsiveness' },
-                { label: 'Gestion des reports/annulations', name: 'rescheduling' }
-            ];
-            
-            adminRatings.forEach(item => {
-                const selectedValue = document.querySelector(`input[name="${item.name}"]:checked`);
-                doc.text(`${item.label}: ${selectedValue ? selectedValue.value : 'N/A'}`, 20, yPosition);
-                yPosition += 10;
-            });
-            
-            // Section Recommandation
-            doc.setFontSize(16);
-            doc.setTextColor(231, 76, 60);
-            doc.text('5. Recommandation', 14, yPosition + 10);
-            
-            doc.setFontSize(12);
-            doc.setTextColor(0, 0, 0);
-            yPosition += 20;
-            
-            const recommendation = document.querySelector('input[name="recommendation"]:checked');
-            doc.text(`Note de recommandation: ${recommendation ? recommendation.value : 'N/A'}`, 20, yPosition);
-            
-            const recommendationReason = document.getElementById('recommendationReason').value;
-            if (recommendationReason) {
-                const splitText = doc.splitTextToSize(recommendationReason, 180);
-                doc.text(splitText, 20, yPosition + 10);
-                yPosition += 10 + (splitText.length * 5);
-            }
-            
-            // Commentaires
-            doc.setFontSize(16);
-            doc.setTextColor(231, 76, 60);
-            doc.text('6. Commentaires', 14, yPosition + 10);
-            
-            doc.setFontSize(12);
-            doc.setTextColor(0, 0, 0);
-            yPosition += 20;
-            
-            const strengths = document.getElementById('strengths').value;
-            if (strengths) {
-                doc.text('Points forts:', 20, yPosition);
-                const splitStrengths = doc.splitTextToSize(strengths, 180);
-                doc.text(splitStrengths, 30, yPosition + 10);
-                yPosition += 10 + (splitStrengths.length * 5);
-            }
-            
-            const improvements = document.getElementById('improvements').value;
-            if (improvements) {
-                doc.text('Améliorations suggérées:', 20, yPosition + 10);
-                const splitImprovements = doc.splitTextToSize(improvements, 180);
-                doc.text(splitImprovements, 30, yPosition + 20);
-                yPosition += 20 + (splitImprovements.length * 5);
-            }
-            
-            // Pied de page
             doc.setFontSize(10);
-            doc.setTextColor(100, 100, 100);
-            doc.text('Évaluation générée automatiquement - UP WORD', 105, 285, { align: 'center' });
+            doc.text(`Formation: ${formData.get('formation_name') || '_______________________'}`, 25, y);
+            y += 7;
+            doc.text(`Apprenant: ${formData.get('student_name') || '_______________________'}`, 25, y);
+            y += 7;
+            doc.text(`Enseignant: ${formData.get('teacher_name') || '_______________________'}`, 25, y);
+            y += 7;
+            doc.text(`Date: ${formData.get('evaluation_date') || '_______________________'}`, 25, y);
+            y += 15;
             
-            // Enregistrer le PDF
-            doc.save(`Evaluation_UPWORD_${document.getElementById('studentName').value}.pdf`);
+            // Section 2 - Satisfaction globale
+            doc.setFontSize(14);
+            doc.text('2. Satisfaction globale (1-5)', 20, y);
+            y += 10;
             
-            // Envoyer par email (solution simplifiée)
-            const mailtoLink = `mailto:contact@upword.co.uk?subject=Évaluation Formation ${document.getElementById('courseName').value}&body=Bonjour,%0D%0A%0D%0AVeuillez trouver ci-joint mon évaluation de formation.%0D%0A%0D%0ACordialement,%0D%0A${document.getElementById('studentName').value}`;
+            doc.setFontSize(10);
+            const satisfactionCriteres = [
+                ['Pertinence par rapport à vos besoins', 'pertinence'],
+                ['Qualité du contenu pédagogique', 'qualite_contenu'],
+                ['Compétence de l\'enseignant', 'competence_enseignant'],
+                ['Méthodes pédagogiques utilisées', 'methodes_pedagogiques'],
+                ['Rythme de la formation', 'rythme_formation']
+            ];
             
-            // Afficher les instructions
-            alert("Votre PDF a été généré. Veuillez l'envoyer à contact@upword.co.uk en pièce jointe.");
+            satisfactionCriteres.forEach(([label, name]) => {
+                const value = formData.get(name) || '_';
+                doc.text(`${label}: ${value}/5`, 25, y);
+                y += 7;
+            });
+            y += 10;
             
-            // Optionnel: Ouvrir le client mail (peut ne pas fonctionner selon le navigateur)
-            window.location.href = mailtoLink;
-        });
+            // Section 3 - Organisation administrative
+            doc.setFontSize(14);
+            doc.text('3. Organisation administrative (1-5)', 20, y);
+            y += 10;
+            
+            doc.setFontSize(10);
+            const adminCriteres = [
+                ['Clarté des informations avant la formation', 'info_clarity'],
+                ['Accueil et disponibilité de l\'équipe', 'accueil_equipe'],
+                ['Gestion des plannings', 'gestion_planning'],
+                ['Support technique', 'support_technique']
+            ];
+            
+            adminCriteres.forEach(([label, name]) => {
+                const value = formData.get(name) || '_';
+                doc.text(`${label}: ${value}/5`, 25, y);
+                y += 7;
+            });
+            y += 10;
+            
+            // Section 4 - Recommandation
+            doc.setFontSize(14);
+            doc.text('4. Recommandation', 20, y);
+            y += 10;
+            
+            doc.setFontSize(10);
+            const recommendation = formData.get('recommendation') || '_';
+            doc.text(`Note de recommandation: ${recommendation}/5`, 25, y);
+            y += 7;
+            
+            const recommendationWhy = formData.get('recommendation_why') || '';
+            if (recommendationWhy) {
+                doc.text('Pourquoi:', 25, y);
+                y += 5;
+                const splitText = doc.splitTextToSize(recommendationWhy, 160);
+                doc.text(splitText, 25, y);
+                y += splitText.length * 5 + 5;
+            } else {
+                doc.text('Pourquoi: _________________________________________________', 25, y);
+                y += 15;
+            }
+            
+            // Vérifier si on a besoin d'une nouvelle page
+            if (y > 250) {
+                doc.addPage();
+                y = 20;
+            }
+            
+            // Section 5 - Commentaires
+            doc.setFontSize(14);
+            doc.text('5. Commentaires', 20, y);
+            y += 10;
+            
+            doc.setFontSize(10);
+            
+            // Points forts
+            doc.text('Points forts de la formation:', 25, y);
+            y += 7;
+            const strengths = formData.get('strengths') || '';
+            if (strengths) {
+                const splitStrengths = doc.splitTextToSize(strengths, 160);
+                doc.text(splitStrengths, 25, y);
+                y += splitStrengths.length * 5 + 10;
+            } else {
+                doc.text('_________________________________________________________', 25, y);
+                doc.text('_________________________________________________________', 25, y + 5);
+                y += 20;
+            }
+            
+            // Améliorations
+            doc.text('Améliorations suggérées:', 25, y);
+            y += 7;
+            const improvements = formData.get('improvements') || '';
+            if (improvements) {
+                const splitImprovements = doc.splitTextToSize(improvements, 160);
+                doc.text(splitImprovements, 25, y);
+                y += splitImprovements.length * 5 + 10;
+            } else {
+                doc.text('_________________________________________________________', 25, y);
+                doc.text('_________________________________________________________', 25, y + 5);
+                y += 20;
+            }
+            
+            // Autres remarques
+            doc.text('Autres remarques:', 25, y);
+            y += 7;
+            const comments = formData.get('comments') || '';
+            if (comments) {
+                const splitComments = doc.splitTextToSize(comments, 160);
+                doc.text(splitComments, 25, y);
+                y += splitComments.length * 5 + 15;
+            } else {
+                doc.text('_________________________________________________________', 25, y);
+                doc.text('_________________________________________________________', 25, y + 5);
+                y += 20;
+            }
+            
+            // Contact
+            if (y > 250) {
+                doc.addPage();
+                y = 20;
+            }
+            
+            doc.setFontSize(12);
+            doc.text('Contact UP WORD', 20, y);
+            y += 10;
+            doc.setFontSize(10);
+            doc.text('📞 06.01.68.48.09', 25, y);
+            y += 7;
+            doc.text('📧 contact@upword.co.uk', 25, y);
+            y += 7;
+            doc.text('🌐 www.upword.com', 25, y);
+            y += 15;
+            
+            doc.setFontSize(8);
+            doc.text('Merci d\'envoyer ce PDF complété à: contact@upword.co.uk', 25, y);
+            
+            // Générer le nom du fichier avec la date
+            const today = new Date();
+            const dateStr = today.toISOString().split('T')[0];
+            const studentName = formData.get('student_name') || 'Evaluation';
+            const filename = `Evaluation_UPWORD_${studentName.replace(/\s+/g, '_')}_${dateStr}.pdf`;
+            
+            // Télécharger le PDF
+            doc.save(filename);
+        }
     </script>
-</body>
-</htm
