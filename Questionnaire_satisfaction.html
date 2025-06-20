@@ -4,29 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UP WORD - Évaluation de Formation</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             color: #333;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
             max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         .header {
             text-align: center;
             margin-bottom: 30px;
-            border-bottom: 3px solid #2c3e50;
+            border-bottom: 3px solid #023762;
             padding-bottom: 20px;
         }
         h1 {
-            color: #2c3e50;
+            color: #023762;
+            font-size: 2.5em;
+            margin-bottom: 10px;
         }
         h2 {
-            color: #3498db;
-            border-bottom: 2px solid #3498db;
+            color: #023762;
+            border-bottom: 2px solid #023762;
             padding-bottom: 5px;
             margin-top: 30px;
+        }
+        .subtitle {
+            color: #666;
+            font-style: italic;
+            margin-bottom: 15px;
         }
         table {
             width: 100%;
@@ -34,420 +50,342 @@
             margin: 15px 0;
         }
         th, td {
-            padding: 10px;
+            padding: 12px;
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
         th {
-            background-color: #f2f2f2;
+            background-color: #f8f9fa;
+            font-weight: bold;
         }
         .required {
             color: red;
         }
         .contact {
             background-color: #f9f9f9;
-            padding: 15px;
-            border-radius: 5px;
+            padding: 20px;
+            border-radius: 8px;
             margin-top: 30px;
+            border-left: 4px solid #023762;
         }
         .rating {
             display: flex;
-            gap: 10px;
+            gap: 15px;
+            flex-wrap: wrap;
         }
         textarea {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             margin: 10px 0;
             border: 1px solid #ddd;
-            border-radius: 4px;
-            min-height: 80px;
+            border-radius: 5px;
+            min-height: 100px;
+            resize: vertical;
         }
         input[type="text"], input[type="date"], select {
-            padding: 5px;
+            width: 100%;
+            padding: 10px;
             border: 1px solid #ddd;
-            border-radius: 4px;
+            border-radius: 5px;
+            margin: 5px 0;
         }
         .rating label {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
+            cursor: pointer;
+        }
+        .rating input[type="radio"] {
+            width: auto;
+        }
+        .buttons {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px 0;
+        }
+        button {
+            background-color: #023762;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 10px 10px 0;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0152a8;
+        }
+        .email-btn {
+            background-color: #27ae60;
+        }
+        .email-btn:hover {
+            background-color: #219a52;
+        }
+        .note {
+            font-style: italic;
+            color: #666;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #e8f4f8;
+            border-radius: 5px;
+            border-left: 4px solid #023762;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            .rating {
+                flex-direction: column;
+                gap: 10px;
+            }
+            button {
+                width: 100%;
+                margin: 5px 0;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>UP WORD</h1>
-        <p><em>Formation linguistique d'excellence</em></p>
-        <h2>Questionnaire d'évaluation de formation</h2>
-        <p>Votre feedback nous est précieux pour améliorer continuellement la qualité de nos formations et services.<br>
-        Merci de prendre 5 minutes pour partager votre expérience.</p>
+    <div class="container" id="formContent">
+        <div class="header">
+            <h1>UP WORD</h1>
+            <p class="subtitle"><em>Formation linguistique d'excellence</em></p>
+            <h2>Questionnaire d'évaluation de formation</h2>
+            <p>Votre feedback nous est précieux pour améliorer continuellement la qualité de nos formations et services.<br>
+            Merci de prendre quelques minutes pour partager votre expérience.</p>
+        </div>
+
+        <form id="evaluationForm">
+            <h2>1. Informations générales <span class="required">*</span></h2>
+            <table>
+                <tr>
+                    <td><strong>Nom de l'apprenant :</strong></td>
+                    <td><input type="text" id="nom" name="nom" required></td>
+                </tr>
+                <tr>
+                    <td><strong>Nom de la formation :</strong></td>
+                    <td><input type="text" id="formation" name="formation" required></td>
+                </tr>
+                <tr>
+                    <td><strong>Enseignant(e) :</strong></td>
+                    <td><input type="text" id="enseignant" name="enseignant" required></td>
+                </tr>
+                <tr>
+                    <td><strong>Lieu de la formation :</strong></td>
+                    <td><input type="text" id="lieu" name="lieu" required></td>
+                </tr>
+                <tr>
+                    <td><strong>Date :</strong></td>
+                    <td><input type="date" id="date" name="date" required></td>
+                </tr>
+            </table>
+
+            <h2>2. Satisfaction globale</h2>
+            <table>
+                <tr>
+                    <th>Critère</th>
+                    <th>Évaluation</th>
+                </tr>
+                <tr>
+                    <td>La formation vous semble-t-elle utile ?</td>
+                    <td>
+                        <select name="utilite" required>
+                            <option value="">-- Sélectionnez --</option>
+                            <option value="1">Pas du tout</option>
+                            <option value="2">Un peu</option>
+                            <option value="3">Oui</option>
+                            <option value="4">Tout à fait</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>A-t-elle répondu à vos attentes ?</td>
+                    <td>
+                        <select name="attentes" required>
+                            <option value="">-- Sélectionnez --</option>
+                            <option value="1">Pas du tout</option>
+                            <option value="2">Un peu</option>
+                            <option value="3">Oui</option>
+                            <option value="4">Tout à fait</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Pertinence par rapport à vos besoins</td>
+                    <td>
+                        <select name="pertinence">
+                            <option value="">-- Sélectionnez --</option>
+                            <option value="1">1 - Très insatisfait</option>
+                            <option value="2">2 - Insatisfait</option>
+                            <option value="3">3 - Neutre</option>
+                            <option value="4">4 - Satisfait</option>
+                            <option value="5">5 - Très satisfait</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Qualité du contenu pédagogique</td>
+                    <td>
+                        <select name="qualite_contenu">
+                            <option value="">-- Sélectionnez --</option>
+                            <option value="1">1 - Très insatisfait</option>
+                            <option value="2">2 - Insatisfait</option>
+                            <option value="3">3 - Neutre</option>
+                            <option value="4">4 - Satisfait</option>
+                            <option value="5">5 - Très satisfait</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Compétence de l'enseignant</td>
+                    <td>
+                        <select name="competence_enseignant">
+                            <option value="">-- Sélectionnez --</option>
+                            <option value="1">1 - Très insatisfait</option>
+                            <option value="2">2 - Insatisfait</option>
+                            <option value="3">3 - Neutre</option>
+                            <option value="4">4 - Satisfait</option>
+                            <option value="5">5 - Très satisfait</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+
+            <h2>3. Organisation administrative</h2>
+            <table>
+                <tr>
+                    <th>Critère</th>
+                    <th>Évaluation</th>
+                </tr>
+                <tr>
+                    <td>Clarté des informations avant la formation</td>
+                    <td>
+                        <select name="info_clarity">
+                            <option value="">-- Sélectionnez --</option>
+                            <option value="1">1 - Très insatisfait</option>
+                            <option value="2">2 - Insatisfait</option>
+                            <option value="3">3 - Neutre</option>
+                            <option value="4">4 - Satisfait</option>
+                            <option value="5">5 - Très satisfait</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Accueil et disponibilité de l'équipe</td>
+                    <td>
+                        <select name="accueil_equipe">
+                            <option value="">-- Sélectionnez --</option>
+                            <option value="1">1 - Très insatisfait</option>
+                            <option value="2">2 - Insatisfait</option>
+                            <option value="3">3 - Neutre</option>
+                            <option value="4">4 - Satisfait</option>
+                            <option value="5">5 - Très satisfait</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+
+            <h2>4. Recommandation</h2>
+            <p><strong>À quel point recommanderiez-vous UP WORD ?</strong></p>
+            <div class="rating">
+                <label><input type="radio" name="recommendation" value="1"> 1 (Pas du tout)</label>
+                <label><input type="radio" name="recommendation" value="2"> 2</label>
+                <label><input type="radio" name="recommendation" value="3"> 3</label>
+                <label><input type="radio" name="recommendation" value="4"> 4</label>
+                <label><input type="radio" name="recommendation" value="5"> 5 (Absolument)</label>
+            </div>
+            <p><strong>Pourquoi ?</strong></p>
+            <input type="text" name="recommendation_why" placeholder="Expliquez votre choix...">
+
+            <h2>5. Commentaires</h2>
+            <p><strong>Ce que vous avez le plus apprécié :</strong></p>
+            <textarea name="pointsPlus" placeholder="Décrivez les points positifs de la formation..."></textarea>
+
+            <p><strong>Ce que vous avez le moins apprécié :</strong></p>
+            <textarea name="pointsMoins" placeholder="Décrivez les points à améliorer..."></textarea>
+
+            <p><strong>Suggestions d'amélioration :</strong></p>
+            <textarea name="suggestions" placeholder="Vos suggestions pour améliorer la formation..."></textarea>
+
+            <p><strong>Autres remarques :</strong></p>
+            <textarea name="autres_remarques" placeholder="Toute autre remarque ou commentaire..."></textarea>
+
+            <div class="contact">
+                <h3>Contact UP WORD</h3>
+                <p>📞 <strong>06.01.68.48.09</strong></p>
+                <p>📧 <strong>contact@upword.co.uk</strong></p>
+                <p>🌐 <strong>www.upword.com</strong></p>
+                <p><em>Un grand merci pour votre contribution !</em></p>
+            </div>
+
+            <div class="buttons">
+                <button type="button" onclick="generatePDF()">📄 Télécharger le PDF</button>
+                <button type="button" class="email-btn" onclick="sendEmail()">📧 Envoyer par e-mail</button>
+            </div>
+
+            <div class="note">
+                <p><strong>Instructions :</strong></p>
+                <p>1. Complétez le formulaire ci-dessus</p>
+                <p>2. Cliquez sur "📄 Télécharger le PDF" pour sauvegarder vos réponses</p>
+                <p>3. Cliquez sur "📧 Envoyer par e-mail" pour préparer l'envoi à <strong>contact@upword.co.uk</strong></p>
+            </div>
+        </form>
     </div>
 
-    <h2>1. Informations générales <span class="required">*</span></h2>
-    <form>
-        <table>
-            <tr>
-                <td><strong>Nom de la formation :</strong></td>
-                <td><input type="text" name="formation_name" required style="width: 100%"></td>
-            </tr>
-            <tr>
-                <td><strong>Nom de l'apprenant :</strong></td>
-                <td><input type="text" name="student_name" required style="width: 100%"></td>
-            </tr>
-            <tr>
-                <td><strong>Enseignant(e) :</strong></td>
-                <td><input type="text" name="teacher_name" required style="width: 100%"></td>
-            </tr>
-            <tr>
-                <td><strong>Date :</strong></td>
-                <td><input type="date" name="evaluation_date" required></td>
-            </tr>
-        </table>
-
-        <h2>2. Satisfaction globale (1 = Très insatisfait → 5 = Très satisfait)</h2>
-        <table>
-            <tr>
-                <th>Critère</th>
-                <th>Note</th>
-            </tr>
-            <tr>
-                <td>Pertinence par rapport à vos besoins</td>
-                <td class="rating">
-                    <select name="pertinence">
-                        <option value="">Choisir</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>Qualité du contenu pédagogique</td>
-                <td class="rating">
-                    <select name="qualite_contenu">
-                        <option value="">Choisir</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>Compétence de l'enseignant</td>
-                <td class="rating">
-                    <select name="competence_enseignant">
-                        <option value="">Choisir</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>Méthodes pédagogiques utilisées</td>
-                <td class="rating">
-                    <select name="methodes_pedagogiques">
-                        <option value="">Choisir</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>Rythme de la formation</td>
-                <td class="rating">
-                    <select name="rythme_formation">
-                        <option value="">Choisir</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-                </td>
-            </tr>
-        </table>
-
-        <h2>3. Organisation administrative</h2>
-        <table>
-            <tr>
-                <th>Critère</th>
-                <th>Note</th>
-            </tr>
-            <tr>
-                <td>Clarté des informations avant la formation</td>
-                <td class="rating">
-                    <select name="info_clarity">
-                        <option value="">Choisir</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>Accueil et disponibilité de l'équipe</td>
-                <td class="rating">
-                    <select name="accueil_equipe">
-                        <option value="">Choisir</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>Gestion des plannings</td>
-                <td class="rating">
-                    <select name="gestion_planning">
-                        <option value="">Choisir</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>Support technique</td>
-                <td class="rating">
-                    <select name="support_technique">
-                        <option value="">Choisir</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-                </td>
-            </tr>
-        </table>
-
-        <h2>4. Recommandation</h2>
-        <p>À quel point recommanderiez-vous UP WORD ?</p>
-        <div class="rating">
-            <label><input type="radio" name="recommendation" value="1"> 1 (Pas du tout)</label>
-            <label><input type="radio" name="recommendation" value="2"> 2</label>
-            <label><input type="radio" name="recommendation" value="3"> 3</label>
-            <label><input type="radio" name="recommendation" value="4"> 4</label>
-            <label><input type="radio" name="recommendation" value="5"> 5 (Absolument)</label>
-        </div>
-        <p>Pourquoi ? <input type="text" name="recommendation_why" style="width: 100%"></p>
-
-        <h2>5. Commentaires</h2>
-        <p>Points forts de la formation :</p>
-        <textarea name="strengths" placeholder="Décrivez les aspects positifs de votre formation..."></textarea>
-
-        <p>Améliorations suggérées :</p>
-        <textarea name="improvements" placeholder="Quelles améliorations proposeriez-vous ?"></textarea>
-
-        <p>Autres remarques :</p>
-        <textarea name="comments" placeholder="Toute autre remarque ou suggestion..."></textarea>
-
-        <div class="contact">
-            <h3>Contact UP WORD</h3>
-            <p>📞 <strong>06.01.68.48.09</strong></p>
-            <p>📧 <strong>contact@upword.com</strong></p>
-            <p>🌐 <strong>www.upword.com</strong></p>
-            <p><em>Un grand merci pour votre contribution !</em></p>
-        </div>
-
-        <div style="text-align: center; margin-top: 30px;">
-            <button type="button" onclick="generatePDF()" style="padding: 15px 30px; background-color: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; margin-right: 10px;">📄 Générer PDF</button>
-            <p style="margin-top: 15px; color: #666; font-style: italic;">
-                Après avoir généré le PDF, veuillez l'envoyer par email à : <strong>contact@upword.co.uk</strong>
-            </p>
-        </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script>
         function generatePDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
+            // Vérifier que les champs obligatoires sont remplis
+            const requiredFields = ['nom', 'formation', 'enseignant', 'lieu', 'date'];
+            for (let field of requiredFields) {
+                if (!document.getElementById(field).value) {
+                    alert('Veuillez remplir tous les champs obligatoires avant de générer le PDF.');
+                    document.getElementById(field).focus();
+                    return;
+                }
+            }
+
+            const element = document.getElementById('formContent');
+            const nom = document.getElementById('nom').value;
+            const formation = document.getElementById('formation').value;
+            const date = document.getElementById('date').value;
             
-            // Configuration de base
-            doc.setFontSize(16);
-            doc.text('UP WORD - Évaluation de Formation', 20, 20);
+            const filename = `Evaluation_UpWord_${nom.replace(/\s+/g, '_')}_${formation.replace(/\s+/g, '_')}_${date}.pdf`;
             
-            doc.setFontSize(12);
-            let y = 40;
+            const opt = {
+                margin: 1,
+                filename: filename,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
             
-            // Récupération des données du formulaire
-            const formData = new FormData(document.querySelector('form'));
+            html2pdf().set(opt).from(element).save();
+        }
+
+        function sendEmail() {
+            const nom = document.getElementById('nom').value;
+            const formation = document.getElementById('formation').value;
             
-            // Section 1 - Informations générales
-            doc.setFontSize(14);
-            doc.text('1. Informations générales', 20, y);
-            y += 10;
-            
-            doc.setFontSize(10);
-            doc.text(`Formation: ${formData.get('formation_name') || '_______________________'}`, 25, y);
-            y += 7;
-            doc.text(`Apprenant: ${formData.get('student_name') || '_______________________'}`, 25, y);
-            y += 7;
-            doc.text(`Enseignant: ${formData.get('teacher_name') || '_______________________'}`, 25, y);
-            y += 7;
-            doc.text(`Date: ${formData.get('evaluation_date') || '_______________________'}`, 25, y);
-            y += 15;
-            
-            // Section 2 - Satisfaction globale
-            doc.setFontSize(14);
-            doc.text('2. Satisfaction globale (1-5)', 20, y);
-            y += 10;
-            
-            doc.setFontSize(10);
-            const satisfactionCriteres = [
-                ['Pertinence par rapport à vos besoins', 'pertinence'],
-                ['Qualité du contenu pédagogique', 'qualite_contenu'],
-                ['Compétence de l\'enseignant', 'competence_enseignant'],
-                ['Méthodes pédagogiques utilisées', 'methodes_pedagogiques'],
-                ['Rythme de la formation', 'rythme_formation']
-            ];
-            
-            satisfactionCriteres.forEach(([label, name]) => {
-                const value = formData.get(name) || '_';
-                doc.text(`${label}: ${value}/5`, 25, y);
-                y += 7;
-            });
-            y += 10;
-            
-            // Section 3 - Organisation administrative
-            doc.setFontSize(14);
-            doc.text('3. Organisation administrative (1-5)', 20, y);
-            y += 10;
-            
-            doc.setFontSize(10);
-            const adminCriteres = [
-                ['Clarté des informations avant la formation', 'info_clarity'],
-                ['Accueil et disponibilité de l\'équipe', 'accueil_equipe'],
-                ['Gestion des plannings', 'gestion_planning'],
-                ['Support technique', 'support_technique']
-            ];
-            
-            adminCriteres.forEach(([label, name]) => {
-                const value = formData.get(name) || '_';
-                doc.text(`${label}: ${value}/5`, 25, y);
-                y += 7;
-            });
-            y += 10;
-            
-            // Section 4 - Recommandation
-            doc.setFontSize(14);
-            doc.text('4. Recommandation', 20, y);
-            y += 10;
-            
-            doc.setFontSize(10);
-            const recommendation = formData.get('recommendation') || '_';
-            doc.text(`Note de recommandation: ${recommendation}/5`, 25, y);
-            y += 7;
-            
-            const recommendationWhy = formData.get('recommendation_why') || '';
-            if (recommendationWhy) {
-                doc.text('Pourquoi:', 25, y);
-                y += 5;
-                const splitText = doc.splitTextToSize(recommendationWhy, 160);
-                doc.text(splitText, 25, y);
-                y += splitText.length * 5 + 5;
-            } else {
-                doc.text('Pourquoi: _________________________________________________', 25, y);
-                y += 15;
+            if (!nom || !formation) {
+                alert('Veuillez remplir au moins votre nom et le nom de la formation.');
+                return;
             }
             
-            // Vérifier si on a besoin d'une nouvelle page
-            if (y > 250) {
-                doc.addPage();
-                y = 20;
-            }
-            
-            // Section 5 - Commentaires
-            doc.setFontSize(14);
-            doc.text('5. Commentaires', 20, y);
-            y += 10;
-            
-            doc.setFontSize(10);
-            
-            // Points forts
-            doc.text('Points forts de la formation:', 25, y);
-            y += 7;
-            const strengths = formData.get('strengths') || '';
-            if (strengths) {
-                const splitStrengths = doc.splitTextToSize(strengths, 160);
-                doc.text(splitStrengths, 25, y);
-                y += splitStrengths.length * 5 + 10;
-            } else {
-                doc.text('_________________________________________________________', 25, y);
-                doc.text('_________________________________________________________', 25, y + 5);
-                y += 20;
-            }
-            
-            // Améliorations
-            doc.text('Améliorations suggérées:', 25, y);
-            y += 7;
-            const improvements = formData.get('improvements') || '';
-            if (improvements) {
-                const splitImprovements = doc.splitTextToSize(improvements, 160);
-                doc.text(splitImprovements, 25, y);
-                y += splitImprovements.length * 5 + 10;
-            } else {
-                doc.text('_________________________________________________________', 25, y);
-                doc.text('_________________________________________________________', 25, y + 5);
-                y += 20;
-            }
-            
-            // Autres remarques
-            doc.text('Autres remarques:', 25, y);
-            y += 7;
-            const comments = formData.get('comments') || '';
-            if (comments) {
-                const splitComments = doc.splitTextToSize(comments, 160);
-                doc.text(splitComments, 25, y);
-                y += splitComments.length * 5 + 15;
-            } else {
-                doc.text('_________________________________________________________', 25, y);
-                doc.text('_________________________________________________________', 25, y + 5);
-                y += 20;
-            }
-            
-            // Contact
-            if (y > 250) {
-                doc.addPage();
-                y = 20;
-            }
-            
-            doc.setFontSize(12);
-            doc.text('Contact UP WORD', 20, y);
-            y += 10;
-            doc.setFontSize(10);
-            doc.text('📞 06.01.68.48.09', 25, y);
-            y += 7;
-            doc.text('📧 contact@upword.co.uk', 25, y);
-            y += 7;
-            doc.text('🌐 www.upword.com', 25, y);
-            y += 15;
-            
-            doc.setFontSize(8);
-            doc.text('Merci d\'envoyer ce PDF complété à: contact@upword.co.uk', 25, y);
-            
-            // Générer le nom du fichier avec la date
-            const today = new Date();
-            const dateStr = today.toISOString().split('T')[0];
-            const studentName = formData.get('student_name') || 'Evaluation';
-            const filename = `Evaluation_UPWORD_${studentName.replace(/\s+/g, '_')}_${dateStr}.pdf`;
-            
-            // Télécharger le PDF
-            doc.save(filename);
+            const subject = `Évaluation de formation - ${nom}`;
+            const body = `Bonjour,
+
+Je vous transmets mon évaluation de la formation « ${formation} ».
+
+Veuillez trouver ci-joint le fichier PDF contenant mes réponses au questionnaire d'évaluation.
+
+Bien cordialement,
+${nom}`;
+
+            const mailto = `mailto:contact@upword.co.uk?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.location.href = mailto;
         }
     </script>
+</body>
+</html>
